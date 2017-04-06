@@ -7,6 +7,10 @@ public class UserAuth {
 	
 	public boolean authUser(String email, String Password) {
 		
+		/* Import customer list */
+		this.customers = getCustomers();
+
+		
 		/* Validate Email*/
 		int counter, emailLength;
 		
@@ -33,14 +37,17 @@ public class UserAuth {
 					if(email.charAt(counter).matches("@")){
 						counterAt += 1;
 					}
-					/* if there doesnt exist an '@', but a '.' has been found, exit fail */
-					if(email.charAt(counter).matches(".") && counterAt < 1){
+					/* if there doesnt exist an '@', but a '.com' has been found, exit fail */
+					if(email.toLowerCase().contains(".com") && counterAt < 1){
 						return false;
 						
-					/* check again if there is an '@', +1 to counterPeriod */
-					}else if(email.charAt(counter).matches(".")){
+					/* check again if there is an '.com', +1 to counterPeriod */
+					}else if(email.toLowerCase().contains(".com")){
 						counterPeriod += 1;
 
+					}
+					if(counterPeriod > 1){
+						return false;
 					}
 				}
 				
@@ -51,21 +58,90 @@ public class UserAuth {
 			
 		}
 		
-		/* no validation as of yet has been selected for passwords, anything at this point that is not an empty string is accepted */
-		
-		/* assumption that only email and password needs to be validated, name, adress and phone have not been specified */
+		/* no validation for passwords, anything at this point that is not an empty string is accepted */
 		
 		
 		/* ***NEEDS TO BE LOOKED AT*** this will check with current email accounts to ensure there are no already existing emails accounts by the same name */
-		if(email.equals(AbstractUser.getEmail())){
+		if(email.equals(customers.getEmail())){
 			return false;
 		}
+		
 
 	}
 
 	public boolean registerUser(String name, String email, String password, String address, String phone) {
 		
 		
+		int apartmentNumber, streetNumber, postcode;
+		string streetName, suburbName, state, tempString;
+		
+		if(authUser(email, password) == false){
+			return false;
+		}
+		
+		if(name == null){
+			return false;
+		}
+		
+		if(address != null){
+			
+			String delim1 = "/";
+			String delim2 = " ";
+			
+			if(address.contains("/") && isDigit(address.charAt(0));){
+				StringTokenizer st1  = new StringTokenizer(address, delim1);
+				
+				apartmentNumber = address.nextToken();
+				streetNumber = address.nextToken();
+
+			}else{
+				return false;
+			}
+			
+			/* Redo this rubbish */
+			StringTokenizer st2  = new StringTokenizer(address, delim2);
+			
+			address.nextToken();
+			streetName = address.nextToken();
+			suburbName = address.nextToken();
+			
+			if(address.hasMoreTokens()){
+			tempString = address.nextToken();
+			if(tempString.matches(".*[0-9].*")){
+				postcode = tempString;
+			}else{
+				suburbName = tempString;
+			}
+			}else{
+				return false;
+			}
+			
+			if(address.hasMoreTokens()){
+			tempString = address.nextToken();
+			if(tempString.matches(".*[0-9].*")){
+				postcode = tempString;
+			}else{
+				state = tempString;
+			}
+			}else{
+				return false;
+			}
+				
+			if(address.hasMoreTokens()){
+			tempString = address.nextToken();
+			if(tempString.matches(".*[0-9].*")){
+				postcode = tempString;
+			}else{
+				return false;
+			}
+			}else{
+				return false;
+			}
+		}
+		
+		if(phoneNumber.matches(".*[a-z].*")){
+			return false;
+		}
 		
 		return false;
 
